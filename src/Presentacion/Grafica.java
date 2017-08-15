@@ -1,8 +1,6 @@
 package Presentacion;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -77,7 +75,7 @@ public class Grafica extends JDialog {
 		
 		lblNewLabel = new JLabel("Gr\u00e1ficas 2D y 3D de la posici\u00F3n del sol");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new java.awt.Font("Tahoma", 0, 30)); 
+		lblNewLabel.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 30));
 		lblNewLabel.setBounds(10, 11, 629, 52);
 		panel.add(lblNewLabel);
 		
@@ -103,7 +101,7 @@ public class Grafica extends JDialog {
 		lblNewLabel_1 = new JLabel("Gr\u00e1ficas 2D y 3D de la posici\u00F3n del sol");
 		lblNewLabel_1.setBounds(10, 11, 629, 52);
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new java.awt.Font("Tahoma", 0, 30));
+		lblNewLabel_1.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 30));
 		panel_2.add(lblNewLabel_1);
 
 	
@@ -112,7 +110,7 @@ public class Grafica extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				try {
-					if(rdbtnGrficad.isSelected()==true){
+					if(rdbtnGrficad.isSelected()){
 						
 						grafica3D.removeAllPlots();
 						grafica2D.removeAllPlots();
@@ -126,7 +124,7 @@ public class Grafica extends JDialog {
 								+ "horas (una hora igual a 15 grados), minutos y segundos \n "
 								+ "hacia el Este a lo largo del ecuador celeste.\n\n "
 								+ "El punto Aries (o punto Vernal) est\u00e1 en la posici\u00F3n del Sol en el \n "
-								+ "equinoccio de Pramivera o Equinoccio vernal. Su s\u00edmbolo es \u03B1");
+								+ "equinoccio de Primavera o Equinoccio vernal. Su s\u00edmbolo es \u03B1");
 					
 					}else{
 						
@@ -151,9 +149,6 @@ public class Grafica extends JDialog {
 					JOptionPane
 							.showMessageDialog(null,
 									"Elija la opci\u00F3n 'decimal' de la tabla para generar valores");
-				} catch (IndexOutOfBoundsException e) {
-					JOptionPane.showMessageDialog(null,
-							"No ha insertado valores en la tabla");
 				}
 				
 			}
@@ -164,7 +159,7 @@ public class Grafica extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
-					if(rdbtnGrficad.isSelected()==true){
+					if(rdbtnGrficad.isSelected()){
 						
 						
 						grafica2D.removeAllPlots();
@@ -206,9 +201,6 @@ public class Grafica extends JDialog {
 					JOptionPane
 							.showMessageDialog(null,
 									"Elija la opci\u00F3n 'decimal' de la tabla para generar valores");
-				} catch (IndexOutOfBoundsException e) {
-					JOptionPane.showMessageDialog(null,
-							"No ha insertado valores en la tabla");
 				}
 
 			}
@@ -240,7 +232,7 @@ public class Grafica extends JDialog {
 		btnAnalema.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					if(rdbtnGrficad.isSelected()==true){
+					if(rdbtnGrficad.isSelected()){
 						
 						
 						grafica2D.removeAllPlots();
@@ -291,7 +283,7 @@ public class Grafica extends JDialog {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					if(rdbtnGrficad.isSelected()==true){
+					if(rdbtnGrficad.isSelected()){
 						
 						
 						grafica2D.removeAllPlots();
@@ -343,7 +335,7 @@ public class Grafica extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				try {
-					if(rdbtnGrficad.isSelected()==true){
+					if(rdbtnGrficad.isSelected()){
 						
 						
 						grafica2D.removeAllPlots();
@@ -412,7 +404,7 @@ public class Grafica extends JDialog {
 		}
 	}
 
-	public void getDec(double[] x1) {
+	void getDec(double[] x1) {
 		x = new double[x1.length];
 		y = new double[x1.length];
 		z = new double[x1.length][x1.length];
@@ -433,7 +425,7 @@ public class Grafica extends JDialog {
 		}
 	}
 	
-	public void getAc(double[] x2) {
+	 void getAc(double[] x2) {
 		x1 = new double[x2.length];
 		y1 = new double[x2.length];
 		z1 = new double[x2.length][x2.length];
@@ -453,7 +445,7 @@ public class Grafica extends JDialog {
 		}
 	}
 	
-	public void getEq(double[] x3) {
+	 void getEq(double[] x3) {
 		x2 = new double[x3.length];
 		y2 = new double[x3.length];
 		z2 = new double[x3.length][x3.length];

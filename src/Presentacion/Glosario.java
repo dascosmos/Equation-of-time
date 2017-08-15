@@ -114,7 +114,7 @@ public class Glosario extends JDialog {
 				case 3:
 					lblNewLabel.setIcon(new ImageIcon(About.class.getResource("/Images/CoordenadasEc.jpg")));
 					textArea.setText("Declinaci\u00F3n solar:\n\n"
-							+ "La declinación es el \u00e1ngulo que forma un astro con el ecuador celeste. \n "
+							+ "La declinaci?n es el \u00e1ngulo que forma un astro con el ecuador celeste. \n "
 							+ "Es una de las dos coordenadas del sistema de coordenadas ecuatoriales.\n"
 							+ "La declinaci\u00F3n se mide en grados y es positiva si est\u00e1 al norte del\n"
 							+ "ecuador celeste y negativa si est\u00e1 al sur.\n\n "
@@ -127,7 +127,7 @@ public class Glosario extends JDialog {
 					textArea.setText("D\u00eda Juliano:\n\n"
 							+ "La fecha juliana (JD, por sus siglas en ingl\u00e9s) \n"
 							+ "es el n\u00famero de d\u00edas y fracci\u00f3n transcurridos \n"
-							+ "desde el mediod\u00eda del 1º de enero del año 4713 a. C.\n\n"
+							+ "desde el mediod\u00eda del 1? de enero del a?o 4713 a. C.\n\n"
 							+ "Es fuertemente utilizado en la astronom\u00eda\n"
 							+ "debido a que los otros tipos de calendarios\n"
 							+ "hacen m\u00e1s complejos los c\u00e1lculos.");

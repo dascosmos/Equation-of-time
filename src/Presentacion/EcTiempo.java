@@ -6,15 +6,9 @@ import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Insets;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
 
 import Logica.CargaDatos;
 import Logica.EoT;
@@ -24,11 +18,7 @@ import java.awt.event.ActionEvent;
 import java.nio.charset.Charset;
 import java.util.Vector;
 
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import java.awt.Toolkit;
-import javax.swing.JComboBox;
 import javax.swing.border.TitledBorder;
 
 public class EcTiempo extends JFrame {
@@ -80,7 +70,7 @@ public class EcTiempo extends JFrame {
 		
 		obj=new EoT();
 		setTitle("Ecuaci\u00f3n del tiempo");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 749, 678);
 		contentPane = new JPanel();
 		

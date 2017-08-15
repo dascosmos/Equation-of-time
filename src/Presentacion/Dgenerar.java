@@ -94,7 +94,7 @@ public class Dgenerar extends JFrame {
 				double anio = Double.parseDouble(textField.getText());
 		
 
-					if (rdbtnHorasMinSeg.isSelected() == true) {
+					if (rdbtnHorasMinSeg.isSelected()) {
 						for (int i = 12; i >= 1; i--) {
 							switch (i) {
 							case 1:
@@ -340,7 +340,7 @@ public class Dgenerar extends JFrame {
 
 						}	
 					}//fin if radiobutton
-					else if (rdbtnDecimal.isSelected() == true) {
+					else if (rdbtnDecimal.isSelected()) {
 
 						for (int i = 12; i >= 1; i--) {
 							switch (i) {
@@ -563,8 +563,8 @@ public class Dgenerar extends JFrame {
 				chooser.setMultiSelectionEnabled(false);
 				chooser.setAcceptAllFileFilterUsed(false);
 				if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					List<JTable> tb = new ArrayList<JTable>();
-					List<String> nom = new ArrayList<String>();
+					List<JTable> tb = new ArrayList<>();
+					List<String> nom = new ArrayList<>();
 					tb.add(table);
 					nom.add("anio");
 					String file = chooser.getSelectedFile().toString()
@@ -608,14 +608,14 @@ public class Dgenerar extends JFrame {
 		contentPanel.add(btnGraficar);
 	}
 
-	public void limpiarTabla() {
+	 private void limpiarTabla() {
 		int a = table.getRowCount() - 1;
 		for (int i = a; i >= 0; i--) {
 			df.removeRow(i);
 		}
 	}
 	
-	public double[] getAc(){
+	private double[] getAc(){
 		dec=new double[df.getRowCount()];
 		for(int i=0;i<dec.length;i++){
 			dec[i]=(double) df.getValueAt(i, 2);
@@ -623,7 +623,7 @@ public class Dgenerar extends JFrame {
 		return dec;
 	}
 	
-	public double[] getDec(){
+	private double[] getDec(){
 		dec=new double[df.getRowCount()];
 		for(int i=0;i<dec.length;i++){
 			dec[i]=(double) df.getValueAt(i, 3);
@@ -631,7 +631,7 @@ public class Dgenerar extends JFrame {
 		return dec;
 	}
 	
-	public double[] getEq(){
+	private double[] getEq(){
 		dec=new double[df.getRowCount()];
 		for(int i=0;i<dec.length;i++){
 			dec[i]=(double) df.getValueAt(i, 4);

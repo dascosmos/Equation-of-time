@@ -39,7 +39,7 @@ public class About extends JFrame {
 		
 		JLabel lblAcercaDe = new JLabel("Acerca de");
 		lblAcercaDe.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAcercaDe.setFont(new java.awt.Font("Tahoma", 0, 30)); 
+		lblAcercaDe.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 30));
 		lblAcercaDe.setBounds(463, 41, 178, 74);
 		contentPanel.add(lblAcercaDe);
 		
