@@ -126,7 +126,7 @@ public class Grafica extends JDialog {
 								+ "horas (una hora igual a 15 grados), minutos y segundos \n "
 								+ "hacia el Este a lo largo del ecuador celeste.\n\n "
 								+ "El punto Aries (o punto Vernal) est\u00e1 en la posici\u00F3n del Sol en el \n "
-								+ "equinoccio de Pravera o Equinoccio vernal. Su s\u00edmbolo es \u03B1");
+								+ "equinoccio de Pramivera o Equinoccio vernal. Su s\u00edmbolo es \u03B1");
 					
 					}else{
 						
