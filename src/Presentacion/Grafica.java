@@ -126,7 +126,7 @@ public class Grafica extends JDialog {
 								+ "horas (una hora igual a 15 grados), minutos y segundos \n "
 								+ "hacia el Este a lo largo del ecuador celeste.\n\n "
 								+ "El punto Aries (o punto Vernal) est\u00e1 en la posici\u00F3n del Sol en el \n "
-								+ "equinoccio de Primavera o Equinoccio vernal. Su s\u00edmbolo es \u03B1");
+								+ "equinoccio de Pravera o Equinoccio vernal. Su s\u00edmbolo es \u03B1");
 					
 					}else{
 						
@@ -175,7 +175,7 @@ public class Grafica extends JDialog {
 						grafica2D.setAxisLabels("Tiempo(d\u00edas)","Declinaci\u00F3n(grados)");
 						textArea.setEditable(false);
 						textArea.setText("Declinaci\u00F3n solar:\n"
-								+ "La declinación es el \u00e1ngulo que forma un astro con el ecuador celeste. \n "
+								+ "La declinaciï¿½n es el \u00e1ngulo que forma un astro con el ecuador celeste. \n "
 								+ "Es una de las dos coordenadas del sistema de coordenadas ecuatoriales.\n"
 								+ "La declinaci\u00F3n se mide en grados y es positiva si est\u00e1 al norte del\n"
 								+ "ecuador celeste y negativa si est\u00e1 al sur.\n\n "
@@ -192,7 +192,7 @@ public class Grafica extends JDialog {
 						grafica3D.setAxisLabels("Tiempo(d\u00edas)","Declinaci\u00F3n(grados)","Declinaci\u00F3n(grados)");
 						textArea.setEditable(false);
 						textArea.setText("Declinaci\u00F3n solar:\n"
-								+ "La declinación es el \u00e1ngulo que forma un astro con el ecuador celeste. \n "
+								+ "La declinaciï¿½n es el \u00e1ngulo que forma un astro con el ecuador celeste. \n "
 								+ "Es una de las dos coordenadas del sistema de coordenadas ecuatoriales.\n"
 								+ "La declinaci\u00F3n se mide en grados y es positiva si est\u00e1 al norte del\n"
 								+ "ecuador celeste y negativa si est\u00e1 al sur.\n\n "
