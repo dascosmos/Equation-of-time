@@ -38,7 +38,7 @@ public class CargaDatos {
 		}
 	}
 
-	public int getTamaño() {
+	public int getTamanio() {
 
 		return ciudades.size();
 	}

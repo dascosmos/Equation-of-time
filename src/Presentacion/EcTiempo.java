@@ -90,7 +90,7 @@ public class EcTiempo extends JFrame {
 		ciudades = new Vector<String>();
 		cargar.cargarDatos();
 		cargar.print();
-		for (int i = 0;i < cargar.getTamaño(); i++){
+		for (int i = 0;i < cargar.getTamanio(); i++){
 			ciudades.add(cargar.getCiudades(i));
 		}
 		
