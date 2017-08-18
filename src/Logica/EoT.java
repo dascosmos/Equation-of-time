@@ -1,12 +1,11 @@
 package Logica;
 
-import java.util.Date;
-
 public class EoT {
 
 	private double dia, mes, anio, hora, min, seg;
 	private double diaC;
 	private double div = 0.9863013699;
+	private CargaParams params = new CargaParams();
 
 	public void recibirDatos(double dia, double mes, double anio, double hora, double min, double seg) {
 
@@ -75,7 +74,6 @@ public class EoT {
 			delta = (-20 + 32 * Math.pow(((y - 1820) / 100), 2) - 0.5628 * (2150 - y)) / 3600;
 		else
 			delta = (-20 + 32 * Math.pow(((y - 1820) / 100), 2)) / 3600;
-
 		return delta;
 	}
 
@@ -101,6 +99,18 @@ public class EoT {
 		double dj = calculoJuliano();
 		double ti = (dj - 2451545) / 36525;
 		return ti;
+	}
+
+	public double centuriaJDE(){
+		double dj = JDE();
+		double jce = (dj - 2451545) / 36525;
+		return jce;
+	}
+
+	public double JME(){
+		double jc = centuriaJDE();
+		double jme = centuriaJDE()/10;
+		return jme;
 	}
 
 	/* 2. CALCULO DEL LST Y LA ASCENSION RECTA DEL SOL */
@@ -238,7 +248,7 @@ public class EoT {
 
 	}
 
-	/* 3. CALCULO DE LA ASCENCION RECTA Y DECLINACIï¿½N DEL SOL */
+	/* 3. CALCULO DE LA ASCENCION RECTA Y DECLINACION DEL SOL */
 
 	public double ascensionRecta() {
 		double ar = 12 + hGA();
@@ -250,11 +260,6 @@ public class EoT {
 		return a;
 	}
 
-	public double declinacion() {
-		double dj = calculoJuliano();
-		double declinacion = 23.45 * Math.sin(((284 + dj) / 365) * 365);
-		return declinacion;
-	}
 
 	public double declinacion2() {
 		double n = diaC;
@@ -269,86 +274,47 @@ public class EoT {
 		return declinacion;
 	}
 
-	public double declinacion3() {
-		double b = diaC;
-		double a = b + 10;
-		double res = a * div;
-		double declinacion = -23.44 * Math.cos(2 * Math.PI * a / 365);
-
-		return declinacion;
-
-	}
 
 	/* 3. CALCULO DE LA ECUACION DEL TIEMPO */
 
-	public double GMST() {
-		double jd = calculoJuliano() - 2451545;
-		double t = (calculoJuliano() - 2451545) / 36525;
-		double gmst = (((6.697374558 + (2400.051337 * t) + (0.000258222222 * (t * t))
-				- (0.00000000172222222 * (t * t * t)))));
-		double gmst1 = ((6.697374558 + (8640184.812866 * t) + (0.093104 * Math.pow(t, 2))
-				- (0.0000062 * Math.pow(t, 3))));
-		gmst = gmst / 15;
-		if (gmst1 > 360)
-			gmst1 = gmst1 % 360;
-
-		gmst1 = gmst1 / 15;
-
-		return gmst1;
-	}
-
-	public double EofT() {
-		double gmst = GMST();
-		double eot = gmst - ascensionRecta() + 12;
-
-		return eot;
-	}
-
-	@SuppressWarnings("deprecation")
-	public double eqt(int agno, int mes, int dia) {
-
-		long fecha = Date.UTC(agno, mes - 1, dia, 12, 0, 0);
-		System.out.println("fecha usuario " + fecha);
-
-		long fechaO = Date.UTC(2001, 0, 1, 12, 0, 0);
-		System.out.println("fecha j2000 " + fechaO);
-
-		// Dia Juliano
+	/*	public double eqt() {
+            double jme = JME();
+            double m = limit(280.4664567 + jme*(360007.6982779 + jme*(0.03032028 + jme*(1/49931.0 + jme*(-1/15300.0 + jme*(-1/2000000.0))))));
+            //double m = 280.4664567+360007.6982779*JME()+0.03032028*Math.pow(JME(),2)+(Math.pow(JME(),3)/49931)-(Math.pow(JME(),4)/15300)-(Math.pow(JME(),5)/2000000);
+            double gsun = GSunRA();
+            double nut = calculoNutacion();
+            double obl = calculoOblicuidad();
+            double eot = 4*(m-0.0057183-gsun+nut*Math.cos(Math.toRadians(obl)));
+            return eot;
+        }*/
+	public double eqt() {
 		double juliano = calculoJuliano();
 		System.out.println("Dia juliano " + juliano);
-
 		// Siglos Julianos desde 01/01/1900
 		double t = centuriaJuliana();
 		System.out.println("centuria juliana " + t);
-
 		// Anomalia media del Sol
+
 		double ms = (((-.0000033 * t - .00015) * t + 35999.04975) * t + 358.47583);
 		ms = (ms - Math.floor(ms / 360) * 360) * Math.PI / 180;
-		System.out.println("Anomalia " + ms);
 
 		// Longitud ecliptica media del Sol
-		double ls = ((.0003025 * t + 36000.76892) * t + 279.69668);
-		ls = (ls - Math.floor(ls / 360) * 360) * Math.PI / 180;
-		System.out.println("longitud ecliptica " + ls);
+		double ls = Math.toRadians(HLongitude());
 
 		// Oblicuidad de la ecliptica
-		double E = (((5.03e-07 * t - 1.64e-06) * t - .0130125) * t + 23.452294) * Math.PI / 180;
-		System.out.println("Oblicuidad de la ecliptica " + E);
-
+		double E = Math.toRadians(calculoOblicuidad());
 		// Excentricidad
 		double exc = (-1.26e-07 * t - .0000418) * t + 1.675104e-02;
-		System.out.println("excentricidad " + exc);
 
 		// Ecuacion del tiempo
 		double yt = Math.tan(E / 2) * Math.tan(E / 2);
 		System.out.println(yt);
 
-		double eq = -(2 * exc * Math.sin(ms)) - (5 / 4 * exc * exc * Math.sin(2 * ms)) + (yt * Math.sin(2 * ls))
-				- (.5 * yt * yt * Math.sin(4 * ls)) + (4 * exc * yt * Math.sin(ms) * Math.cos(2 * ls));
+		double eq = (((-(2 * exc * Math.sin(ms)) - ((5 / 4) * exc * exc * Math.sin(2 * ms))) + yt * Math.sin(2 * ls)) - (.5 * yt * yt * Math.sin(4 * ls))) + (4 * exc * yt * Math.sin(ms) * Math.cos(2 * ls));
 
 		eq = ((eq * 180 / Math.PI) / 15);
 		System.out.println("eq " + eq);
-		double eqtiempo = (-(eq * 60));
+		double eqtiempo = (eq * 60);
 		System.out.println("eqtiempo " + eqtiempo);
 		return eqtiempo;
 	}
@@ -356,8 +322,8 @@ public class EoT {
 	// 4. Calculo de azimut y altura del sol.
 
 	public double ZE(double longitud) {
-		double h = ascensionRecta() - hGA();
-		double dec = declinacion2();
+		double h = GSunRA() - hGA();
+		double dec = GSundec();
 		double lo = longitud;
 		double pz = 90 - lo;
 		double pe = 90 - dec;
@@ -373,8 +339,8 @@ public class EoT {
 
 	public double Azimut(double longitud) {
 		double ze = ZE(longitud);
-		double h = ascensionRecta() - hGA();
-		double dec = declinacion2();
+		double h = GSunRA() - hGA();
+		double dec = GSundec();
 		double pe = 90 - dec;
 		double z = Math.asin((Math.sin(pe) * Math.sin(h)) / Math.sin(ze));
 		double a = 180 - z;
@@ -386,7 +352,7 @@ public class EoT {
 
 	public String Conversioneq(double entrada) {
 		String signo;
-		if (entrada < 0) {
+		if (entrada > 0) {
 			signo = "+";
 		} else {
 			signo = "-";
@@ -424,7 +390,7 @@ public class EoT {
 		min = (int) mi;
 		se = Math.abs((mi - min) * 60);
 		seg = (int) se;
-		return hora + "º" + min + "'" + seg + "''";
+		return hora + "Âº" + min + "'" + seg + "''";
 
 	}
 
@@ -440,6 +406,90 @@ public class EoT {
 		sumaDeDias += diai;
 		diaC = sumaDeDias;
 
+	}
+	//Heliocentric longitude
+	public double HLongitude(){
+		double l0=params.L0(JME());
+		double l1=params.L1(JME());
+		double l2=params.L2(JME());
+		double l3=params.L3(JME());
+		double l4=params.L4(JME());
+		double l5=params.L5(JME());
+
+		double longitude = Math.toDegrees((l0+l1*JME()+l2*Math.pow(JME(),2)+l3*Math.pow(JME(),3)+l4*Math.pow(JME(),4)+l5*Math.pow(JME(),5))/Math.pow(10,8));
+		return limit(longitude);
+	}
+
+	public double HLatitude(){
+		double b0 = params.B0(JME());
+		double b1 = params.B1(JME());
+		double latitude = Math.toDegrees((b0+b1*JME())/Math.pow(10,8));
+		System.out.println("Latitud heliocentrica: "+latitude);
+		return latitude;
+	}
+
+	public double HRadiusVect(){
+		double r0 = params.R0(JME());
+		double r1 = params.R1(JME());
+		double r2 = params.R2(JME());
+		double r3 = params.R3(JME());
+		double r4 = params.R4(JME());
+
+		double radius = (r0+r1*JME()+r2*Math.pow(JME(),2)+r3*Math.pow(JME(),3)+r4*Math.pow(JME(),4))/Math.pow(10,8);
+		System.out.println("Vector radial: "+radius);
+		return radius;
+	}
+
+	public double limit(double degree) {
+		double to360 = degree / 360;
+		double limdegree = 360 * (to360 - Math.floor(to360));
+		if (limdegree < 0) {
+			limdegree += 360;
+		}
+		return limdegree;
+	}
+
+	public double GLongitude(){
+		double glongitude = HLongitude()+ 180;
+		return limit(glongitude);
+	}
+
+	public double GLatitude(){
+		double glatitude = -HLatitude();
+		System.out.println("latitud geocentrica: "+glatitude);
+		return glatitude;
+	}
+
+	public double AberrationCorrec(){
+		double abr = -(20.4898/(3600*HRadiusVect()));
+		System.out.println("Correccion de aberracion: "+abr);
+		return abr;
+	}
+
+	public double ApparentSunLong(){
+		double longitude = GLongitude()+ calculoNutacion()+ AberrationCorrec();
+		System.out.println("Longitud aparante del sol: "+longitude);
+		return longitude;
+	}
+
+	public double GSunRA(){
+		double appSun = Math.toRadians(ApparentSunLong());
+		double obl = Math.toRadians(calculoOblicuidad());
+		double glat = Math.toRadians(GLatitude());
+		double alpha = Math.atan2((Math.sin(appSun)*Math.cos(obl))-(Math.tan(glat)*Math.sin(obl)),Math.cos(appSun));
+		System.out.println("ascencion recta del sol: "+alpha);
+		return limit(Math.toDegrees(alpha));
+	}
+
+	public double GSundec(){
+		double declination = Math.sin(Math.sin(Math.toRadians(GLatitude()))*Math.cos(Math.toRadians(calculoOblicuidad()))+Math.cos(Math.toRadians(GLatitude()))*Math.sin(Math.toRadians(calculoOblicuidad()))*Math.sin(Math.toRadians(ApparentSunLong())));
+		System.out.println("declinacion del sol: "+declination);
+		return Math.toDegrees(declination);
+	}
+
+	public double DectoHour(double ra){
+		double righta = (ra*24)/360;
+		return righta;
 	}
 
 }

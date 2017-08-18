@@ -1,34 +1,17 @@
 package Presentacion;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import Logica.Exporter;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.rtf.RTFEditorKit;
-import javax.swing.ButtonGroup;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-
-import Logica.Exporter;
-
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-
-import javax.swing.JRadioButton;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Dgenerar extends JFrame {
 	
@@ -110,7 +93,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 									df.insertRow(0, info);
 								}
 								break;
@@ -131,7 +114,7 @@ public class Dgenerar extends JFrame {
 										info[3] = frame.obj
 												.conversionGrado(frame.obj
 														.declinacion2());
-										info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+										info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 										df.insertRow(0, info);
 									}
@@ -150,7 +133,7 @@ public class Dgenerar extends JFrame {
 										info[3] = frame.obj
 												.conversionGrado(frame.obj
 														.declinacion2());
-										info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+										info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 										df.insertRow(0, info);
 									}
@@ -170,7 +153,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 									df.insertRow(0, info);
 								}
 								break;
@@ -187,7 +170,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 									df.insertRow(0, info);
 								}
@@ -205,7 +188,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 									df.insertRow(0, info);
 								}
@@ -223,7 +206,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 									df.insertRow(0, info);
 								}
@@ -241,7 +224,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 									df.insertRow(0, info);
 								}
@@ -259,7 +242,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 									df.insertRow(0, info);
 								}
@@ -277,7 +260,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 									df.insertRow(0, info);
 								}
 								break;
@@ -294,7 +277,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 									df.insertRow(0, info);
 								}
@@ -312,7 +295,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 									df.insertRow(0, info);
 								}
@@ -331,7 +314,7 @@ public class Dgenerar extends JFrame {
 									info[3] = frame.obj
 											.conversionGrado(frame.obj
 													.declinacion2());
-									info[4] = frame.obj.Conversioneq(frame.obj.eqt((int)anio, i, j));
+									info[4] = frame.obj.Conversioneq(frame.obj.eqt());
 
 									df.insertRow(0, info);
 								}
@@ -353,7 +336,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -370,7 +353,7 @@ public class Dgenerar extends JFrame {
 										info[1] = frame.obj.hGA();
 										info[2] = frame.obj.ascensionRecta();
 										info[3] = frame.obj.declinacion2();
-										info[4] = -frame.obj.eqt((int)anio, i, j);
+										info[4] = -frame.obj.eqt();
 										df.insertRow(0, info);
 
 									}
@@ -385,7 +368,7 @@ public class Dgenerar extends JFrame {
 										info[1] = frame.obj.hGA();
 										info[2] = frame.obj.ascensionRecta();
 										info[3] = frame.obj.declinacion2();
-										info[4] = -frame.obj.eqt((int)anio, i, j);
+										info[4] = -frame.obj.eqt();
 										df.insertRow(0, info);
 									}
 
@@ -400,7 +383,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -413,7 +396,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -426,7 +409,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -439,7 +422,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -452,7 +435,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -465,7 +448,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -478,7 +461,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -491,7 +474,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -504,7 +487,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 								break;
@@ -518,7 +501,7 @@ public class Dgenerar extends JFrame {
 									info[1] = frame.obj.hGA();
 									info[2] = frame.obj.ascensionRecta();
 									info[3] = frame.obj.declinacion2();
-									info[4] = -frame.obj.eqt((int)anio, i, j);
+									info[4] = -frame.obj.eqt();
 									df.insertRow(0, info);
 								}
 
