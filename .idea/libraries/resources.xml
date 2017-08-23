@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="resources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/resources/jmatharray.jar!/" />
+      <root url="jar://$PROJECT_DIR$/resources/jxl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/resources/jmathplot.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

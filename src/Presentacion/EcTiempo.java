@@ -1,25 +1,15 @@
 package Presentacion;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Graphics;
-import java.awt.Insets;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
 import Logica.CargaDatos;
 import Logica.EoT;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.nio.charset.Charset;
-import java.util.Vector;
-
-import java.awt.Toolkit;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 public class EcTiempo extends JFrame {
 
@@ -174,7 +164,7 @@ public class EcTiempo extends JFrame {
 					textField_6.setText(String.valueOf(obj.calculoJuliano()));
 					textField_7.setText(String.valueOf(obj.conversionHora(obj.hGA())));
 					textField_8.setText(String.valueOf(obj.conversionHora(obj.ascensionRecta())));
-					textField_9.setText(String.valueOf(obj.Conversioneq(obj.eqt((int)anio, (int)mes, (int)dia))));
+					textField_9.setText(String.valueOf(obj.Conversioneq(obj.eqt())));
 					textField_10.setText(String.valueOf(obj.conversionGrado(obj.declinacion2())));
 					textField_11.setText(String.valueOf(obj.conversionHora(obj.Azimut(cargar.getLongitud(comboBox.getSelectedIndex())))));
 					textField_12.setText(String.valueOf(obj.conversionGrado(obj.Altura(cargar.getLongitud(comboBox.getSelectedIndex())))));
