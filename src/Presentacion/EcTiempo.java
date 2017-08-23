@@ -163,9 +163,9 @@ public class EcTiempo extends JFrame {
 					obj.recibirDatos(dia, mes, anio, hora, min, seg);
 					textField_6.setText(String.valueOf(obj.calculoJuliano()));
 					textField_7.setText(String.valueOf(obj.conversionHora(obj.hGA())));
-					textField_8.setText(String.valueOf(obj.conversionHora(obj.ascensionRecta())));
+					textField_8.setText(String.valueOf(obj.DectoHour(obj.GSunRA())));
 					textField_9.setText(String.valueOf(obj.Conversioneq(obj.eqt())));
-					textField_10.setText(String.valueOf(obj.conversionGrado(obj.declinacion2())));
+					textField_10.setText(String.valueOf(obj.conversionGrado(obj.GSundec())));
 					textField_11.setText(String.valueOf(obj.conversionHora(obj.Azimut(cargar.getLongitud(comboBox.getSelectedIndex())))));
 					textField_12.setText(String.valueOf(obj.conversionGrado(obj.Altura(cargar.getLongitud(comboBox.getSelectedIndex())))));
 					textField_6.setEnabled(false);
