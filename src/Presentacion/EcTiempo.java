@@ -149,7 +149,9 @@ public class EcTiempo extends JFrame {
 		JButton btnCalcular = new JButton("Calcular");
 		btnCalcular.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			
+				double longitud = cargar.getLongitud(comboBox.getSelectedIndex());
+                double latitud = cargar.getLatitud(comboBox.getSelectedIndex());
+
 				try{
 					double dia=Double.parseDouble(textField.getText());
 					double mes=Double.parseDouble(textField_1.getText());
@@ -162,12 +164,12 @@ public class EcTiempo extends JFrame {
 					else
 					obj.recibirDatos(dia, mes, anio, hora, min, seg);
 					textField_6.setText(String.valueOf(obj.calculoJuliano()));
-					textField_7.setText(String.valueOf(obj.conversionHora(obj.hGA())));
+					textField_7.setText(String.valueOf(obj.conversionHora(obj.LST(longitud))));
 					textField_8.setText(String.valueOf(obj.DectoHour(obj.GSunRA())));
 					textField_9.setText(String.valueOf(obj.Conversioneq(obj.eqt())));
 					textField_10.setText(String.valueOf(obj.conversionGrado(obj.GSundec())));
-					textField_11.setText(String.valueOf(obj.conversionHora(obj.Azimut(cargar.getLongitud(comboBox.getSelectedIndex())))));
-					textField_12.setText(String.valueOf(obj.conversionGrado(obj.Altura(cargar.getLongitud(comboBox.getSelectedIndex())))));
+					textField_11.setText(String.valueOf(obj.Azimut(latitud,longitud)));
+					textField_12.setText(String.valueOf(obj.Altura(latitud,longitud)));
 					textField_6.setEnabled(false);
 					textField_7.setEnabled(false);
 					textField_8.setEnabled(false);

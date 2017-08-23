@@ -285,9 +285,9 @@ public class CargaParams {
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IOException a) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            a.printStackTrace();
         }
 
         for (Double param : params) {
@@ -327,6 +327,7 @@ public class CargaParams {
 
         return suma;
     }
+
 
     public double R3(double jme) {
         ArrayList<Double> params = new ArrayList();

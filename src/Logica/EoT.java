@@ -248,32 +248,16 @@ public class EoT {
 
 	}
 
-	/* 3. CALCULO DE LA ASCENCION RECTA Y DECLINACION DEL SOL */
-
-	public double ascensionRecta() {
-		double ar = 12 + hGA();
-		double a;
-		a = hGA() - calculohoras() - 12;
-		if (a < 0)
-			a = 24 + a;
-
-		return a;
+	public double LST(double longitud){
+		double lst = hGA() + ((longitud*24)/360);
+		if(lst < 0){
+		    return 24 + lst;
+        }else if(lst > 24){
+		    return 0 + lst;
+        }else {
+            return lst;
+        }
 	}
-
-
-	public double declinacion2() {
-		double n = diaC;
-		double declinacion = 0.006918 - 0.399912 * Math.cos(2 * Math.PI * (n - 1) / 365)
-				+ 0.070257 * Math.sin(2 * Math.PI * (n - 1) / 365)
-				- 0.006758 * Math.cos(2 * 2 * Math.PI * (n - 1) / 365)
-				+ 0.000907 * Math.sin(2 * 2 * Math.PI * (n - 1) / 365)
-				- 0.002697 * Math.cos(3 * 2 * Math.PI * (n - 1) / 365)
-				+ 0.00148 * Math.sin(3 * 2 * Math.PI * (n - 1) / 365);
-		declinacion = declinacion * 180 / Math.PI;
-
-		return declinacion;
-	}
-
 
 	/* 3. CALCULO DE LA ECUACION DEL TIEMPO */
 
@@ -287,6 +271,7 @@ public class EoT {
             double eot = 4*(m-0.0057183-gsun+nut*Math.cos(Math.toRadians(obl)));
             return eot;
         }*/
+
 	public double eqt() {
 		double juliano = calculoJuliano();
 		System.out.println("Dia juliano " + juliano);
@@ -322,31 +307,53 @@ public class EoT {
 	// 4. Calculo de azimut y altura del sol.
 
 	public double ZE(double longitud) {
-		double h = GSunRA() - hGA();
+		double h = GSunRA() - LST(longitud);
 		double dec = GSundec();
 		double lo = longitud;
 		double pz = 90 - lo;
 		double pe = 90 - dec;
 		double ze = Math.acos(Math.cos(pz) * Math.cos(pe) + Math.sin(pz) * Math.sin(pe) * Math.cos(h));
-		return ze;
+		return Math.toDegrees(ze);
 	}
 
-	public double Altura(double longitud) {
+	/*public double Altura(double latitud,double longitud) {
 		double ze = ZE(longitud);
 		double h = 90 - ze;
 		return h;
-	}
+	}*/
 
-	public double Azimut(double longitud) {
+	/*public double Azimut(double latitud, double longitud) {
 		double ze = ZE(longitud);
-		double h = GSunRA() - hGA();
+		double h = GSunRA() - LST(longitud);
 		double dec = GSundec();
 		double pe = 90 - dec;
 		double z = Math.asin((Math.sin(pe) * Math.sin(h)) / Math.sin(ze));
 		double a = 180 - z;
 		double a1 = a/15;
 		return a1;
-	}
+	}*/
+
+    public double Azimut(double latitud, double longitud){
+        double lst = LST(longitud);
+        double hourAngle = lst - GSunRA();
+        double y = Math.cos(GSundec())*Math.sin(hourAngle);
+        double x = -Math.sin(latitud)+Math.cos(GSundec())*Math.cos(hourAngle)+Math.sin(latitud)*Math.sin(GSundec());
+        double azimuth = Math.toDegrees(-Math.atan2(x,y));
+
+        if (azimuth < 0){
+            return azimuth + 360;
+        }else {
+            return azimuth;
+        }
+    }
+
+    public double Altura(double latitud, double longitud){
+        double lst = LST(longitud);
+        double hourAngle = lst - GSunRA();
+        double altura = Math.asin(Math.sin(latitud)*Math.sin(GSundec())+Math.cos(latitud)*Math.cos(GSundec()*Math.cos(hourAngle)));
+
+        return Math.toDegrees(altura);
+    }
 
 	// 5. Conversion a formato de HH,MM,SS
 
@@ -390,7 +397,7 @@ public class EoT {
 		min = (int) mi;
 		se = Math.abs((mi - min) * 60);
 		seg = (int) se;
-		return hora + "º" + min + "'" + seg + "''";
+		return hora + " deg " + min + "' " + seg + "''";
 
 	}
 
