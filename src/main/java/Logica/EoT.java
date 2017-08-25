@@ -374,7 +374,7 @@ public class EoT {
 
 		double segundos = Math.round(60 * (Math.abs(entrada) - minutos));
 
-		String tiempo = signo + " " + minutos + "\' " + segundos + "\"";
+		String tiempo = signo + " " + minutos + "\' " + segundos + "\'\'";
 
 		return tiempo;
 

@@ -2,7 +2,6 @@ package Presentacion;
 
 import Logica.Exporter;
 import Logica.Mongo;
-import org.math.plot.utils.Array;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -24,7 +23,7 @@ public class Dgenerar extends JFrame {
     private DefaultTableModel df;
     private JRadioButton rdbtnDecimal;
     private JRadioButton rdbtnHorasMinSeg;
-    Grafica graphic;
+    private Grafica graphic;
     private Mongo mongo;
     private double []dec;
 
@@ -365,11 +364,11 @@ public class Dgenerar extends JFrame {
 
                         for (int i = 0; i<lista.size();i++) {
                             token2 =new StringTokenizer(lista.get(i),",");
-                            obj[0] = token2.nextToken();
-                            obj[1] = token2.nextToken();
-                            obj[2] = token2.nextToken();
-                            obj[3] = token2.nextToken();
-                            obj[4] = token2.nextToken();
+                            obj[0] = token2.nextToken().replaceAll("\"","");
+                            obj[1] = token2.nextToken().replaceAll("\"","");
+                            obj[2] = token2.nextToken().replaceAll("\"","");
+                            obj[3] = token2.nextToken().replaceAll("\"","");
+                            obj[4] = token2.nextToken().replaceAll("\"","");
                             df.insertRow(0,obj);
                         }
 
@@ -601,7 +600,7 @@ public class Dgenerar extends JFrame {
                             obj[1] = Double.parseDouble(token2.nextToken());
                             obj[2] = Double.parseDouble(token2.nextToken());
                             obj[3] = Double.parseDouble(token2.nextToken());
-                            obj[4] = -Double.parseDouble(token2.nextToken());
+                            obj[4] = Double.parseDouble(token2.nextToken());
                             df.insertRow(0,obj);
                         }
 
@@ -628,38 +627,35 @@ public class Dgenerar extends JFrame {
 
 
         JButton btnExportarAExcel = new JButton("Exportar a Excel");
-        btnExportarAExcel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                if (table.getRowCount() == 0) {
-                    JOptionPane.showMessageDialog(null,
-                            "No hay datos para guardar");
-                    return;
-                }
-                JFileChooser chooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "Archivos de Excel", "xls");
-                chooser.setFileFilter(filter);
-                chooser.setDialogTitle("Guardar archivo");
-                chooser.setMultiSelectionEnabled(false);
-                chooser.setAcceptAllFileFilterUsed(false);
-                if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    List<JTable> tb = new ArrayList<>();
-                    List<String> nom = new ArrayList<>();
-                    tb.add(table);
-                    nom.add("anio");
-                    String file = chooser.getSelectedFile().toString()
-                            .concat(".xls");
-                    try {
-                        Exporter a = new Exporter(new File(file), tb, nom);
-                        if (a.export()) {
-                            JOptionPane.showMessageDialog(null,
-                                    "Los datos fueron exportados exitosamente");
-                        }
-                    } catch (Exception e) {
-                        // TODO: handle exception
+        btnExportarAExcel.addActionListener(arg0 -> {
+            if (table.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null,
+                        "No hay datos para guardar");
+                return;
+            }
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Archivos de Excel", "xls");
+            chooser.setFileFilter(filter);
+            chooser.setDialogTitle("Guardar archivo");
+            chooser.setMultiSelectionEnabled(false);
+            chooser.setAcceptAllFileFilterUsed(false);
+            if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                List<JTable> tb = new ArrayList<>();
+                List<String> nom = new ArrayList<>();
+                tb.add(table);
+                nom.add("anio");
+                String file = chooser.getSelectedFile().toString()
+                        .concat(".xls");
+                try {
+                    Exporter a = new Exporter(new File(file), tb, nom);
+                    if (a.export()) {
                         JOptionPane.showMessageDialog(null,
-                                "Error, No se exportaron los datos");
+                                "Los datos fueron exportados exitosamente");
                     }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,
+                            "Error, No se exportaron los datos");
                 }
             }
         });
@@ -668,21 +664,19 @@ public class Dgenerar extends JFrame {
 
 
         JButton btnGraficar = new JButton("Graficar");
-        btnGraficar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                try{
-                    graphic=new Grafica(frame);
-                    graphic.getAc(getAc());
-                    graphic.getDec(getDec());
-                    graphic.getEq(getEq());
-                    graphic.setVisible(true);
+        btnGraficar.addActionListener(arg0 -> {
+            try{
+                graphic=new Grafica(frame);
+                graphic.getAc(getAc());
+                graphic.getDec(getDec());
+                graphic.getEq(getEq());
+                graphic.setVisible(true);
 
-                }catch(ClassCastException e){
-                    JOptionPane.showMessageDialog(null, "Escoja la opci\u00f3n 'decimal' y vuelva a intentarlo");
-                    graphic.setVisible(false);
-                }
-
+            }catch(ClassCastException e){
+                JOptionPane.showMessageDialog(null, "Escoja la opci\u00f3n 'decimal' y vuelva a intentarlo");
+                graphic.setVisible(false);
             }
+
         });
         btnGraficar.setBounds(159, 442, 109, 23);
         contentPanel.add(btnGraficar);
