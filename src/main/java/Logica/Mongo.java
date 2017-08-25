@@ -24,19 +24,14 @@ public class Mongo {
         DBObject query = new BasicDBObject();
         query.put("_id",id);
         long count =table.count(query);
-        if (count > 0){
-            return false;
-        }else{
-            return true;
-        }
+        return count <= 0;
 
     }
 
-
     public void createDocument(String id,Object[]info){
 
-            DBObject year = new BasicDBObject("_id", id);
-            table.insert(year);
+        DBObject year = new BasicDBObject("_id", id);
+        table.insert(year);
 
     }
 
@@ -55,9 +50,4 @@ public class Mongo {
         }
 
     }
-
-
-
-
-
 }

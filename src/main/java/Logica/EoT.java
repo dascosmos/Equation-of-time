@@ -334,15 +334,15 @@ public class EoT {
 	}*/
 
     public double Azimut(double latitud, double longitud){
-        double lst = LST(longitud);
-        double hourAngle = Math.toRadians((lst - GSunRA())*15);
-        double dec = Math.toRadians(GSundec());
-        double altura = Altura(latitud,longitud);
-        double y = Math.cos(dec)*Math.sin(hourAngle);
-        double x = -Math.sin(Math.toRadians(latitud))+Math.cos(dec)*Math.cos(hourAngle)+Math.sin(Math.toRadians(latitud))*Math.sin(dec);
-        double azimuth = -Math.atan2(x,y);
-		//double azimuth = Math.asin((-Math.sin(hourAngle)*Math.cos(dec))/Math.cos(altura));
-		azimuth = Math.toDegrees(azimuth);
+		double degLst = (LST(longitud)*360)/24;
+		double degRA = GSunRA();
+		double hourAngle = Math.toRadians(degLst)-Math.toRadians(degRA);
+		double delta = Math.toRadians(GSundec());
+		double lat = Math.toRadians(latitud);
+		double num = Math.sin(hourAngle)*Math.cos(delta);
+		double den = Math.cos(lat)*Math.cos(hourAngle)*Math.cos(delta)+Math.cos(lat)*Math.sin(delta);
+		double azimuth = Math.toDegrees(Math.atan2(num,den));
+
         if (azimuth < 0){
             return azimuth + 360;
         }else {
@@ -352,12 +352,7 @@ public class EoT {
     }
 
     public double Altura(double latitud, double longitud){
-        double lst = LST(longitud);
-        double hourAngle = Math.toRadians((lst - GSunRA())*15);
-        double dec = Math.toRadians(GSundec());
-        double altura = Math.asin(Math.sin(Math.toRadians(latitud))*Math.sin(dec)+Math.cos(Math.toRadians(latitud))*Math.cos(dec)*Math.cos(hourAngle));
-
-        return Math.toDegrees(altura);
+		return 0;
     }
 
 	// 5. Conversion a formato de HH,MM,SS
