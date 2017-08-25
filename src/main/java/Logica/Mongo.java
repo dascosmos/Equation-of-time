@@ -45,11 +45,15 @@ public class Mongo {
         table.update(new BasicDBObject("_id",id),newQuery);
     }
 
-    public void fetchDocuments(String id){
-        DBObject query = new BasicDBObject();
-        query.put("_id",id);
-        long count = table.find(query).count();
-        System.out.println("Cuenta de tabla: "+count);
+    public void fetchDocuments(String id) {
+        DBCursor cursor;
+        for (int i = 0; i < 365; i++){
+            DBObject query = new BasicDBObject().append("params", i);
+            query.put("_id", id);
+            table.find(query);
+            System.out.println();
+        }
+
     }
 
 
