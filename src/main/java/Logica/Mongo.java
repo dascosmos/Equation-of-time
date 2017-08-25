@@ -3,6 +3,8 @@ package Logica;
 
 import com.mongodb.*;
 
+import java.util.ArrayList;
+
 public class Mongo {
 
     MongoClient mongo;
@@ -40,14 +42,20 @@ public class Mongo {
         table.update(new BasicDBObject("_id",id),newQuery);
     }
 
-    public void fetchDocuments(String id) {
-        DBCursor cursor;
+    public String fetchDocuments(String id) {
+        DBCursor cursor = null;
+        DBObject query = new BasicDBObject().append("_id",id);
+        DBObject field = new BasicDBObject();
+        String str = "";
         for (int i = 0; i < 365; i++){
-            DBObject query = new BasicDBObject().append("params", i);
-            query.put("_id", id);
-            table.find(query);
-            System.out.println();
-        }
+            field.put("params", i);
+            cursor = table.find(query,field);
 
+        }
+        while(cursor.hasNext()){
+            BasicDBObject obj = (BasicDBObject) cursor.next();
+            str=obj.getString("params");
+        }
+        return str;
     }
 }
