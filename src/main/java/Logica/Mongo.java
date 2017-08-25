@@ -3,8 +3,6 @@ package Logica;
 
 import com.mongodb.*;
 
-import java.util.ArrayList;
-
 public class Mongo {
 
     MongoClient mongo;
