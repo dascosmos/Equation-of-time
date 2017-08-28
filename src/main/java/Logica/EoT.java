@@ -341,18 +341,21 @@ public class EoT {
 		double lat = Math.toRadians(latitud);
 		double num = Math.sin(hourAngle)*Math.cos(delta);
 		double den = Math.cos(lat)*Math.cos(hourAngle)*Math.cos(delta)+Math.cos(lat)*Math.sin(delta);
-		double azimuth = Math.toDegrees(Math.atan2(num,den));
+		double azimuth = Math.toDegrees(Math.atan2(den,num));
 
-        if (azimuth < 0){
-            return azimuth + 360;
-        }else {
-            return azimuth;
-        }
-        //return Math.toDegrees(azimuth);
+        return azimuth;
     }
 
     public double Altura(double latitud, double longitud){
-		return 0;
+        double degLst = (LST(longitud)*360)/24;
+        double degRA = GSunRA();
+        double hourAngle = Math.toRadians(degLst)-Math.toRadians(degRA);
+        double delta = Math.toRadians(GSundec());
+        double lat = Math.toRadians(latitud);
+        double x = Math.cos(lat)*Math.cos(hourAngle)*Math.cos(delta)+Math.sin(lat)*Math.sin(delta);
+        double altura = Math.asin(x);
+
+    	return Math.toDegrees(altura);
     }
 
 	// 5. Conversion a formato de HH,MM,SS

@@ -166,7 +166,7 @@ public class EcTiempo extends JFrame {
 					textField_8.setText(String.valueOf(obj.DectoHour(obj.GSunRA())));
 					textField_9.setText(String.valueOf(obj.Conversioneq(obj.eqt())));
 					textField_10.setText(String.valueOf(obj.conversionGrado(obj.GSundec())));
-					textField_11.setText(String.valueOf(obj.Azimut(longitud,latitud)));
+					textField_11.setText(String.valueOf(obj.Azimut(latitud,longitud)));
 					textField_12.setText(String.valueOf(obj.Altura(latitud,longitud)));
 					textField_6.setEnabled(false);
 					textField_7.setEnabled(false);
