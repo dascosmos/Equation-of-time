@@ -236,20 +236,25 @@ public class EoT {
 		return oblicuidad;
 
 	}
-
-	public double hGA() {
+	//metodo para calcular el tiempo sideral medio (mean sidereal time)
+	public double msd(){
 		double dj = calculoJuliano();
 		double t = (dj - 2451545) / 36525;
+		double msd=((280.46061837 + 360.98564736629 * (dj - 2451545) + 0.000387933 * (t * t) - ((t * t * t) / 38710000)));
+		return limit(msd);
+	}
+	//metodo para calcular el tiempo sideral aparente (apparent sidereal time)
+	public double hGA() {
 		double nut = calculoNutacion();
 		double obl = calculoOblicuidad();
-		double hga = ((280.46061837 + 360.98564736629 * (dj - 2451545) + 0.000387933 * (t * t) - (t * t * t) / 38710000
-				+ nut * Math.cos(obl)) % 360) / 15;
-		return hga;
+		double msd = msd();
+		double ast = msd+nut*Math.cos(Math.toRadians(obl));
+		return ast;
 
 	}
-
+	//metodo para calcular el tiempo sideral aparente (LMST)
 	public double LST(double longitud){
-		double lst = hGA() + ((longitud*24)/360);
+		double lst = ((hGA()*24)/360) + ((longitud*24)/360);
 		if(lst < 0){
 		    return 24 + lst;
         }else if(lst > 24){
@@ -259,18 +264,106 @@ public class EoT {
         }
 	}
 
-	/* 3. CALCULO DE LA ECUACION DEL TIEMPO */
+	/* 5. CALCULO DE COORDENADAS TOPOCENTRICAS*/
 
-	/*	public double eqt() {
-            double jme = JME();
-            double m = limit(280.4664567 + jme*(360007.6982779 + jme*(0.03032028 + jme*(1/49931.0 + jme*(-1/15300.0 + jme*(-1/2000000.0))))));
-            //double m = 280.4664567+360007.6982779*JME()+0.03032028*Math.pow(JME(),2)+(Math.pow(JME(),3)/49931)-(Math.pow(JME(),4)/15300)-(Math.pow(JME(),5)/2000000);
-            double gsun = GSunRA();
-            double nut = calculoNutacion();
-            double obl = calculoOblicuidad();
-            double eot = 4*(m-0.0057183-gsun+nut*Math.cos(Math.toRadians(obl)));
-            return eot;
-        }*/
+	//Método que calcula el angulo horario del sol en la posicion del observador.
+	public double localHA(double longitude){
+		double asd = hGA();
+		double ra = GSunRA();
+		double h = asd+longitude-ra;
+		return limit(h);
+	}
+
+	//Metodo que calcula el paralaje horizontal ecuatorial del sol
+	public double sunParallax(){
+		double radius = HRadiusVect();
+		double epsilon = 8.794/(3600*radius);
+		return epsilon;
+	}
+
+	//Metodo que calcula el parametro u
+	public double u(double latitude){
+		double u = Math.atan(0.99664719*Math.tan(Math.toRadians(latitude)));
+		return u;
+	}
+
+	//Metodo para calcular el termino x
+	public double x(double elevation, double latitude){
+		double u = u(latitude);
+		double x = Math.cos(u)+(elevation/6378140)*Math.cos(Math.toRadians(latitude));
+		return x;
+	}
+
+	//Metodo para calcular el termino y
+	public double y(double elevation, double latitude){
+		double u = u(latitude);
+		double y = 0.99664719*Math.sin(u)+(elevation/6378140)*Math.sin(Math.toRadians(latitude));
+		return y;
+	}
+
+	//Metodo para calcular el paralaje en la ascencion recta del sol
+	public double RAparalax(double elevation, double latitude,double longitude){
+		double x = x(elevation, latitude);
+		double h = Math.toRadians(localHA(longitude));
+		double epsilon = Math.toRadians(sunParallax());
+		double dec = Math.toRadians(GSundec());
+		double deltaAlpha = Math.atan2((-x*Math.sin(epsilon)*Math.sin(h)),(Math.cos(dec)-x*Math.sin(epsilon)*Math.cos(h)));
+		return Math.toDegrees(deltaAlpha);
+	}
+
+	//metodo para calcular la ascencion recta topocentrica del sol
+	public double topoRA(double elevation, double latitude,double longitude){
+		double deltaalpha=RAparalax(elevation,latitude,longitude);
+		double alpha = GSunRA();
+		double alphaprima = alpha+deltaalpha;
+		return alphaprima;
+	}
+
+	public double topoDec(double elevation, double latitude,double longitude){
+		double dec = Math.toRadians(GSundec());
+		double x = x(elevation, latitude);
+		double y = y(elevation, latitude);
+		double epsilon = Math.toRadians(sunParallax());
+		double h = Math.toRadians(localHA(longitude));
+		double deltaA = Math.toRadians(RAparalax(elevation, latitude, longitude));
+		double deltaPrima = Math.atan2(((Math.sin(dec)-y*Math.sin(epsilon))*Math.cos(deltaA)),(Math.cos(dec)-x*Math.sin(epsilon)*Math.cos(h)));
+		return Math.toDegrees(deltaPrima);
+	}
+
+	//Metodo para calcular el angulo horario topocentrico
+
+	public double topoLocalHourAngle(double elevation, double latitude, double longitude){
+		double deltaalpha=RAparalax(elevation,latitude,longitude);
+		double h = localHA(longitude);
+		double topoH = h-deltaalpha;
+		return topoH;
+	}
+
+	//Metodo para calcular el angulo de elevacion topocentrico
+	public double topoElevationAngle(double elevation, double latitude, double longitude){
+		double topoLHA=Math.toRadians(topoLocalHourAngle(elevation, latitude, longitude));
+		double lat = Math.toRadians(latitude);
+		double dec = Math.toRadians(topoDec(elevation, latitude, longitude));
+		double ezero = Math.asin(Math.sin(lat)*Math.sin(dec)+Math.cos(lat)*Math.cos(dec)*Math.cos(topoLHA));
+		return Math.toDegrees(ezero);
+	}
+
+	//Metodo para calcular la correccion de refraccion atmosferica (futuro)
+
+	//Metodo para calcular el angulo azimutal topocentrico
+
+	public double topoAzimuthAngle(double elevation, double latitude, double longitude){
+		double topoLHA=Math.toRadians(topoLocalHourAngle(elevation, latitude, longitude));
+		double lat = Math.toRadians(latitude);
+		double dec = Math.toRadians(topoDec(elevation, latitude, longitude));
+		double azimuth = Math.atan2(Math.sin(topoLHA),(Math.cos(topoLHA)*Math.sin(lat)-Math.tan(dec)*Math.cos(lat)));
+		return limit(Math.toDegrees(azimuth)+180);
+	}
+
+
+
+
+	/* 4. CALCULO DE LA ECUACION DEL TIEMPO */
 
 	public double eqt() {
 		double juliano = calculoJuliano();
@@ -316,49 +409,6 @@ public class EoT {
 		return Math.toDegrees(ze);
 	}
 
-	/*public double Altura(double latitud,double longitud) {
-		double ze = ZE(longitud);
-		double h = 90 - ze;
-		return h;
-	}*/
-
-	/*public double Azimut(double latitud, double longitud) {
-		double ze = ZE(longitud);
-		double h = GSunRA() - LST(longitud);
-		double dec = GSundec();
-		double pe = 90 - dec;
-		double z = Math.asin((Math.sin(pe) * Math.sin(h)) / Math.sin(ze));
-		double a = 180 - z;
-		double a1 = a/15;
-		return a1;
-	}*/
-
-    public double Azimut(double latitud, double longitud){
-        double lst = LST(longitud);
-        double hourAngle = Math.toRadians((lst - GSunRA())*15);
-        double dec = Math.toRadians(GSundec());
-        double altura = Altura(latitud,longitud);
-        double y = Math.cos(dec)*Math.sin(hourAngle);
-        double x = -Math.sin(Math.toRadians(latitud))+Math.cos(dec)*Math.cos(hourAngle)+Math.sin(Math.toRadians(latitud))*Math.sin(dec);
-        double azimuth = -Math.atan2(x,y);
-		//double azimuth = Math.asin((-Math.sin(hourAngle)*Math.cos(dec))/Math.cos(altura));
-		azimuth = Math.toDegrees(azimuth);
-        if (azimuth < 0){
-            return azimuth + 360;
-        }else {
-            return azimuth;
-        }
-        //return Math.toDegrees(azimuth);
-    }
-
-    public double Altura(double latitud, double longitud){
-        double lst = LST(longitud);
-        double hourAngle = Math.toRadians((lst - GSunRA())*15);
-        double dec = Math.toRadians(GSundec());
-        double altura = Math.asin(Math.sin(Math.toRadians(latitud))*Math.sin(dec)+Math.cos(Math.toRadians(latitud))*Math.cos(dec)*Math.cos(hourAngle));
-
-        return Math.toDegrees(altura);
-    }
 
 	// 5. Conversion a formato de HH,MM,SS
 
