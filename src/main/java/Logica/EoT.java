@@ -397,18 +397,6 @@ public class EoT {
 		return eqtiempo;
 	}
 
-	// 4. Calculo de azimut y altura del sol.
-
-	public double ZE(double longitud) {
-		double h = GSunRA() - LST(longitud);
-		double dec = GSundec();
-		double lo = longitud;
-		double pz = 90 - lo;
-		double pe = 90 - dec;
-		double ze = Math.acos(Math.cos(pz) * Math.cos(pe) + Math.sin(pz) * Math.sin(pe) * Math.cos(h));
-		return Math.toDegrees(ze);
-	}
-
 
 	// 5. Conversion a formato de HH,MM,SS
 
