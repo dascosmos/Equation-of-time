@@ -36,6 +36,12 @@ public class Grafica extends JDialog {
 	private double[] x2;
 	private double[] y2;
 	private double[][] z2;
+	private double[] x3;
+	private double[] y3;
+	private double[][] z3;
+	private double[] x4;
+	private double[] y4;
+	private double[][] z4;
 	private double[][] prueb;
 	Plot2DPanel grafica2D = new Plot2DPanel();
 	Plot3DPanel grafica3D = new Plot3DPanel();
@@ -330,58 +336,106 @@ public class Grafica extends JDialog {
 		contentPanel.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("AscR/Dec");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				try {
-					if(rdbtnGrficad.isSelected()){
-						
-						
-						grafica2D.removeAllPlots();
-						grafica3D.removeAllPlots();
-						tabbedPane.setSelectedIndex(0);
-						lblNewLabel.setText("Ascensi\u00F3n recta/Declinaci\u00F3n");
-						grafica2D.addScatterPlot("AcsR/Dec", y1, y);
-						grafica2D.setAxisLabels("Ascensi\u00F3n (horas)","Declinaci\u00F3n(grados)");textArea.setEditable(false);
-						textArea.setEditable(false);
-						textArea.setText("Coordenadas ecuatoriales (absolutas):\n"
-								+ "Son un tipo de coordenadas celestes que muestran la\n"
-								+ "posici\u00F3n de un objeto respecto al ecuador celeste\n"
-								+ "y al punto aries (momento en el que el sol pasa de sur a norte).\n\n"
-								+ "Sus 'ejes' se denominan Ascensi\u00F3n recta y declinaci\u00F3n. ");
-					
-					}else{
+		btnNewButton_1.addActionListener(arg0 -> {
 
-						grafica2D.removeAllPlots();
-						grafica3D.removeAllPlots();
-						tabbedPane.setSelectedIndex(1);
-						lblNewLabel_1.setText("Ascensi\u00F3n recta/Declinaci\u00F3n");
-						grafica3D.addScatterPlot("AcsR/Dec", x1, y1, y);
-						grafica3D.setAxisLabels("Tiempo(d\u00edas)","Ascensi\u00F3n (horas)", "Declinaci\u00F3n(grados)");
-						textArea.setEditable(false);
-						textArea.setText("Coordenadas ecuatoriales (absolutas):\n"
-								+ "Son un tipo de coordenadas celestes que muestran la\n"
-								+ "posici\u00F3n de un objeto respecto al ecuador celeste\n"
-								+ "y al punto aries (momento en el que el sol pasa de sur a norte).\n\n"
-								+ "Sus 'ejes' se denominan Ascensi\u00F3n recta y declinaci\u00F3n. ");
-					}
-				} catch (NullPointerException e) {
-					JOptionPane.showMessageDialog(null,
-							"No ha insertado valores en la tabla");
-				} catch (NumberFormatException e) {
-					JOptionPane
-							.showMessageDialog(null,
-									"Elija la opci\u00F3n 'decimal' de la tabla para generar valores");
-				} catch (IndexOutOfBoundsException e) {
-					JOptionPane.showMessageDialog(null,
-							"Valores incorrectos");
-				}
-				
-			}
-		});
+            try {
+                if(rdbtnGrficad.isSelected()){
+
+
+                    grafica2D.removeAllPlots();
+                    grafica3D.removeAllPlots();
+                    tabbedPane.setSelectedIndex(0);
+                    lblNewLabel.setText("Ascensi\u00F3n recta/Declinaci\u00F3n");
+                    grafica2D.addScatterPlot("AcsR/Dec", y1, y);
+                    grafica2D.setAxisLabels("Ascensi\u00F3n (horas)","Declinaci\u00F3n(grados)");textArea.setEditable(false);
+                    textArea.setEditable(false);
+                    textArea.setText("Coordenadas ecuatoriales (absolutas):\n"
+                            + "Son un tipo de coordenadas celestes que muestran la\n"
+                            + "posici\u00F3n de un objeto respecto al ecuador celeste\n"
+                            + "y al punto aries (momento en el que el sol pasa de sur a norte).\n\n"
+                            + "Sus 'ejes' se denominan Ascensi\u00F3n recta y declinaci\u00F3n. ");
+
+                }else{
+
+                    grafica2D.removeAllPlots();
+                    grafica3D.removeAllPlots();
+                    tabbedPane.setSelectedIndex(1);
+                    lblNewLabel_1.setText("Ascensi\u00F3n recta/Declinaci\u00F3n");
+                    grafica3D.addScatterPlot("AcsR/Dec", x1, y1, y);
+                    grafica3D.setAxisLabels("Tiempo(d\u00edas)","Ascensi\u00F3n (horas)", "Declinaci\u00F3n(grados)");
+                    textArea.setEditable(false);
+                    textArea.setText("Coordenadas ecuatoriales (absolutas):\n"
+                            + "Son un tipo de coordenadas celestes que muestran la\n"
+                            + "posici\u00F3n de un objeto respecto al ecuador celeste\n"
+                            + "y al punto aries (momento en el que el sol pasa de sur a norte).\n\n"
+                            + "Sus 'ejes' se denominan Ascensi\u00F3n recta y declinaci\u00F3n. ");
+                }
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(null,
+                        "No ha insertado valores en la tabla");
+            } catch (NumberFormatException e) {
+                JOptionPane
+                        .showMessageDialog(null,
+                                "Elija la opci\u00F3n 'decimal' de la tabla para generar valores");
+            } catch (IndexOutOfBoundsException e) {
+                JOptionPane.showMessageDialog(null,
+                        "Valores incorrectos");
+            }
+
+        });
 		btnNewButton_1.setBounds(813, 165, 147, 23);
 		contentPanel.add(btnNewButton_1);
-		
+
+		JButton azimuth = new JButton("Azimuth/Altura");
+		azimuth.addActionListener(arg0 ->{
+
+            try {
+                if(rdbtnGrficad.isSelected()){
+
+
+                    grafica2D.removeAllPlots();
+                    grafica3D.removeAllPlots();
+                    tabbedPane.setSelectedIndex(0);
+                    lblNewLabel.setText("Azimuth");
+                    grafica2D.addScatterPlot("Azimuth/Altura", y3, y4);
+                    grafica2D.setAxisLabels("Ascensi\u00F3n (horas)","Declinaci\u00F3n(grados)");textArea.setEditable(false);
+                    textArea.setEditable(false);
+                    textArea.setText("Coordenadas ecuatoriales (absolutas):\n"
+                            + "Son un tipo de coordenadas celestes que muestran la\n"
+                            + "posici\u00F3n de un objeto respecto al ecuador celeste\n"
+                            + "y al punto aries (momento en el que el sol pasa de sur a norte).\n\n"
+                            + "Sus 'ejes' se denominan Ascensi\u00F3n recta y declinaci\u00F3n. ");
+
+                }else{
+
+                    grafica2D.removeAllPlots();
+                    grafica3D.removeAllPlots();
+                    tabbedPane.setSelectedIndex(1);
+                    lblNewLabel_1.setText("Ascensi\u00F3n recta/Declinaci\u00F3n");
+                    grafica3D.addScatterPlot("AcsR/Dec", x3, y3, y4);
+                    grafica3D.setAxisLabels("Tiempo(d\u00edas)","Ascensi\u00F3n (horas)", "Declinaci\u00F3n(grados)");
+                    textArea.setEditable(false);
+                    textArea.setText("Coordenadas ecuatoriales (absolutas):\n"
+                            + "Son un tipo de coordenadas celestes que muestran la\n"
+                            + "posici\u00F3n de un objeto respecto al ecuador celeste\n"
+                            + "y al punto aries (momento en el que el sol pasa de sur a norte).\n\n"
+                            + "Sus 'ejes' se denominan Ascensi\u00F3n recta y declinaci\u00F3n. ");
+                }
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(null,
+                        "No ha insertado valores en la tabla");
+            } catch (NumberFormatException e) {
+                JOptionPane
+                        .showMessageDialog(null,
+                                "Elija la opci\u00F3n 'decimal' de la tabla para generar valores");
+            } catch (IndexOutOfBoundsException e) {
+                JOptionPane.showMessageDialog(null,
+                        "Valores incorrectos");
+            }
+
+        });
+        azimuth.setBounds(813, 295, 147, 23);
+        contentPanel.add(azimuth);
 		
 		
 
@@ -461,6 +515,46 @@ public class Grafica extends JDialog {
 				z2[j][i]=x3[i];
 			}
 			
+		}
+	}
+
+	void getAZ(double[] x4) {
+		x3 = new double[x4.length];
+		y3 = new double[x4.length];
+		z3 = new double[x4.length][x4.length];
+		for(int i = 0; i < x1.length; i++){
+			x3[i]=i+1;
+		}
+		for (int i = 0; i < y1.length; i++) {
+			y3[i] = x4[i];
+
+		}
+
+		for (int i = 0; i < z1.length; i++) {
+			for(int j=0;j<z1.length;j++){
+				z3[j][i]=x4[i];
+			}
+
+		}
+	}
+
+	void getAL(double[] x5) {
+		x4 = new double[x5.length];
+		y4 = new double[x5.length];
+		z4 = new double[x5.length][x5.length];
+		for(int i = 0; i < x1.length; i++){
+			x4[i]=i+1;
+		}
+		for (int i = 0; i < y1.length; i++) {
+			y4[i] = x5[i];
+
+		}
+
+		for (int i = 0; i < z1.length; i++) {
+			for(int j=0;j<z1.length;j++){
+				z4[j][i]=x5[i];
+			}
+
 		}
 	}
 

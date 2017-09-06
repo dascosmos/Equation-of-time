@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 public class Dgenerar extends JFrame {
 
@@ -28,30 +29,69 @@ public class Dgenerar extends JFrame {
     private double []dec;
 
     public Dgenerar(final EcTiempo frame) {
-        setResizable(false);
+        setResizable(true);
         setTitle("Datos por a\u00f1o");
-        setBounds(100, 100, 716, 538);
+        setBounds(100, 100, 1080, 768);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
-        {
-            JLabel lblEscribaElAo = new JLabel("Escriba el a\u00f1o:");
-            lblEscribaElAo.setBounds(24, 48, 100, 14);
-            contentPanel.add(lblEscribaElAo);
-        }
+
+        JLabel lblEscribaElAo = new JLabel("Año:");
+        lblEscribaElAo.setBounds(24, 48, 100, 14);
+        contentPanel.add(lblEscribaElAo);
+
 
         textField = new JTextField();
         textField.setBounds(114, 45, 96, 20);
         contentPanel.add(textField);
         textField.setColumns(10);
 
+        Vector ciudades = new Vector();
+        frame.cargar.cargarDatos();
+
+        for (int i = 0; i< frame.cargar.getTamanio();i++){
+            ciudades.add(frame.cargar.getCiudades(i));
+        }
+
+        JLabel loc = new JLabel("Localizacion");
+        loc.setBounds(24, 88, 120, 20);
+        contentPanel.add(loc);
+        JComboBox location = new JComboBox(ciudades);
+        location.setBounds(114, 88, 170, 20);
+        contentPanel.add(location);
+
+        JLabel date = new JLabel("hora (HH:MM:SS)");
+        date.setBounds(344, 88, 170, 20);
+        contentPanel.add(date);
+
+        JTextField textHora = new JTextField();
+        textHora.setBounds(529, 88, 20, 20);
+        contentPanel.add(textHora);
+
+        JLabel doscolons = new JLabel(":");
+        doscolons.setBounds(555, 88, 20, 20);
+        contentPanel.add(doscolons);
+
+        JTextField textMin = new JTextField();
+        textMin.setBounds(580, 88, 20, 20);
+        contentPanel.add(textMin);
+
+        JLabel doscolons2 = new JLabel(":");
+        doscolons2.setBounds(605, 88, 20, 20);
+        contentPanel.add(doscolons2);
+
+        JTextField textSeg = new JTextField();
+        textSeg.setBounds(630, 88, 20, 20);
+        contentPanel.add(textSeg);
+
+
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(42, 105, 620, 302);
+        scrollPane.setBounds(42, 150, 900, 500);
         contentPanel.add(scrollPane);
 
         Object[] titles = {"Fecha", "Hora sideral", "Ascensi\u00f3n recta",
-                "Declinaci\u00f3n", "Ecuaci\u00f3n del tiempo" };
+                "Declinaci\u00f3n", "Ecuaci\u00f3n del tiempo", "Azimuth", "Altura" };
 
         df = new DefaultTableModel(titles, 0);
         table = new JTable(df);
@@ -78,9 +118,23 @@ public class Dgenerar extends JFrame {
             try {
                 limpiarTabla();
 
-                Object[] info = new Object[5];
+                Object[] info = new Object[7];
                 double anio = Double.parseDouble(textField.getText());
+                double longitud = frame.cargar.getLongitud(location.getSelectedIndex());
+                double latitud = frame.cargar.getLatitud(location.getSelectedIndex());
+                double elevacion = 0;
+                double hora = Double.parseDouble(textHora.getText());
+                double min = Double.parseDouble(textMin.getText());
+                double seg = Double.parseDouble(textSeg.getText());
+                try {
+                    if (elevacion == 0) {
+                        elevacion = Double.parseDouble(JOptionPane.showInputDialog("Ingrese la elevacion de la ciudad"));
+                    }else{
 
+                    }
+                }catch(NumberFormatException e){
+                    JOptionPane.showMessageDialog(null, "Ingrese un campo numerico");
+                }
                 if (rdbtnHorasMinSeg.isSelected()) {
                     String year = String.valueOf(anio)+"_1";
                     if(mongo.validateDocument(year)) {
@@ -90,7 +144,7 @@ public class Dgenerar extends JFrame {
                                 case 1:
 
                                     for (int j = 31; j >= 1; j--) {
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);
                                         info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
@@ -101,6 +155,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
                                     }
@@ -111,8 +167,7 @@ public class Dgenerar extends JFrame {
                                             || anio % 400 == 0) {
                                         for (int j = 29; j >= 1; j--) {
 
-                                            frame.obj.recibirDatos(j, i, anio, 0, 0,
-                                                    0);
+                                            frame.obj.recibirDatos(j, i, anio, hora, min, seg);
                                             info[0] = frame.obj.getFecha();
                                             info[1] = frame.obj
                                                     .conversionHora(frame.obj.hGA());
@@ -123,7 +178,8 @@ public class Dgenerar extends JFrame {
                                                     .conversionGrado(frame.obj
                                                             .GSundec());
                                             info[4] = frame.obj.Conversioneq(frame.obj.eqt());
-
+                                            info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                            info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
                                             df.insertRow(0, info);
                                             mongo.actualizeDocument(year, info);
                                         }
@@ -131,8 +187,7 @@ public class Dgenerar extends JFrame {
                                     } else {
                                         for (int j = 28; j >= 1; j--) {
 
-                                            frame.obj.recibirDatos(j, i, anio, 0, 0,
-                                                    0);
+                                            frame.obj.recibirDatos(j, i, anio, hora, min,seg);
                                             info[0] = frame.obj.getFecha();
                                             info[1] = frame.obj
                                                     .conversionHora(frame.obj.hGA());
@@ -143,7 +198,8 @@ public class Dgenerar extends JFrame {
                                                     .conversionGrado(frame.obj
                                                             .GSundec());
                                             info[4] = frame.obj.Conversioneq(frame.obj.eqt());
-
+                                            info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                            info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
                                             df.insertRow(0, info);
                                             mongo.actualizeDocument(year, info);
                                         }
@@ -153,8 +209,7 @@ public class Dgenerar extends JFrame {
 
                                 case 3:
                                     for (int j = 31; j >= 1; j--) {
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -164,6 +219,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
                                     }
@@ -171,8 +228,7 @@ public class Dgenerar extends JFrame {
                                 case 4:
                                     for (int j = 30; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -182,6 +238,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
 
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
@@ -190,8 +248,7 @@ public class Dgenerar extends JFrame {
                                 case 5:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -201,6 +258,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
 
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
@@ -209,8 +268,7 @@ public class Dgenerar extends JFrame {
                                 case 6:
                                     for (int j = 30; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -220,6 +278,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
 
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
@@ -228,8 +288,7 @@ public class Dgenerar extends JFrame {
                                 case 7:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -239,6 +298,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
 
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
@@ -247,8 +308,7 @@ public class Dgenerar extends JFrame {
                                 case 8:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -258,6 +318,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
 
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
@@ -266,8 +328,7 @@ public class Dgenerar extends JFrame {
                                 case 9:
                                     for (int j = 30; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -277,6 +338,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
                                     }
@@ -284,8 +347,7 @@ public class Dgenerar extends JFrame {
                                 case 10:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -295,6 +357,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
 
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
@@ -303,8 +367,7 @@ public class Dgenerar extends JFrame {
                                 case 11:
                                     for (int j = 30; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -314,6 +377,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
 
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
@@ -323,8 +388,7 @@ public class Dgenerar extends JFrame {
 
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj
                                                 .conversionHora(frame.obj.hGA());
                                         info[2] = frame.obj
@@ -334,6 +398,8 @@ public class Dgenerar extends JFrame {
                                                 .conversionGrado(frame.obj
                                                         .GSundec());
                                         info[4] = frame.obj.Conversioneq(frame.obj.eqt());
+                                        info[5] = frame.obj.conversionHora(frame.obj.topoAzimuthAngle(elevacion,latitud,longitud));
+                                        info[6] = frame.obj.conversionHora(frame.obj.topoElevationAngle(elevacion,latitud,longitud));
 
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year, info);
@@ -346,7 +412,7 @@ public class Dgenerar extends JFrame {
                         String auxList =mongo.fetchDocuments(year);
                         System.out.println(auxList);
                         ArrayList<String> lista = new ArrayList<>();
-                        Object[] obj = new Object[5];
+                        Object[] obj = new Object[7];
                         StringTokenizer token = new StringTokenizer(auxList,"][");
                         StringTokenizer token2;
                         while (token.hasMoreElements()) {
@@ -369,6 +435,8 @@ public class Dgenerar extends JFrame {
                             obj[2] = token2.nextToken().replaceAll("\"","");
                             obj[3] = token2.nextToken().replaceAll("\"","");
                             obj[4] = token2.nextToken().replaceAll("\"","");
+                            obj[5] = token2.nextToken().replaceAll("\"","");
+                            obj[6] = token2.nextToken().replaceAll("\"","");
                             df.insertRow(0,obj);
                         }
 
@@ -384,12 +452,13 @@ public class Dgenerar extends JFrame {
 
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -401,13 +470,14 @@ public class Dgenerar extends JFrame {
 
                                         for (int j = 29; j >= 1; j--) {
 
-                                            frame.obj.recibirDatos(j, i, anio, 0, 0,
-                                                    0);
+                                            frame.obj.recibirDatos(j, i, anio, hora, min, seg);
                                             info[0] = frame.obj.getFecha();
                                             info[1] = frame.obj.hGA();
                                             info[2] = frame.obj.GSunRA();
                                             info[3] = frame.obj.GSundec();
                                             info[4] = -frame.obj.eqt();
+                                            info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                            info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                             df.insertRow(0, info);
                                             mongo.actualizeDocument(year2, info);
                                         }
@@ -416,13 +486,14 @@ public class Dgenerar extends JFrame {
 
                                         for (int j = 28; j >= 1; j--) {
 
-                                            frame.obj.recibirDatos(j, i, anio, 0, 0,
-                                                    0);
+                                            frame.obj.recibirDatos(j, i, anio, hora, min, seg);
                                             info[0] = frame.obj.getFecha();
                                             info[1] = frame.obj.hGA();
                                             info[2] = frame.obj.GSunRA();
                                             info[3] = frame.obj.GSundec();
                                             info[4] = -frame.obj.eqt();
+                                            info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                            info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                             df.insertRow(0, info);
                                             mongo.actualizeDocument(year2, info);
                                         }
@@ -433,12 +504,13 @@ public class Dgenerar extends JFrame {
                                 case 3:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -447,12 +519,13 @@ public class Dgenerar extends JFrame {
                                 case 4:
                                     for (int j = 30; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -461,12 +534,13 @@ public class Dgenerar extends JFrame {
                                 case 5:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -475,12 +549,13 @@ public class Dgenerar extends JFrame {
                                 case 6:
                                     for (int j = 30; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -489,12 +564,13 @@ public class Dgenerar extends JFrame {
                                 case 7:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -503,12 +579,13 @@ public class Dgenerar extends JFrame {
                                 case 8:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -517,12 +594,13 @@ public class Dgenerar extends JFrame {
                                 case 9:
                                     for (int j = 30; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -531,12 +609,13 @@ public class Dgenerar extends JFrame {
                                 case 10:
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -545,12 +624,13 @@ public class Dgenerar extends JFrame {
                                 case 11:
                                     for (int j = 30; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -560,12 +640,13 @@ public class Dgenerar extends JFrame {
 
                                     for (int j = 31; j >= 1; j--) {
 
-                                        frame.obj.recibirDatos(j, i, anio, 0, 0, 0);
-                                        info[0] = frame.obj.getFecha();
+                                        frame.obj.recibirDatos(j, i, anio, hora, min, seg);                                        info[0] = frame.obj.getFecha();
                                         info[1] = frame.obj.hGA();
                                         info[2] = frame.obj.GSunRA();
                                         info[3] = frame.obj.GSundec();
                                         info[4] = -frame.obj.eqt();
+                                        info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
+                                        info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
                                         mongo.actualizeDocument(year2, info);
                                     }
@@ -578,7 +659,7 @@ public class Dgenerar extends JFrame {
                         String auxList =mongo.fetchDocuments(year2);
                         System.out.println(auxList);
                         ArrayList<String> lista = new ArrayList<>();
-                        Object[] obj = new Object[5];
+                        Object[] obj = new Object[7];
                         StringTokenizer token = new StringTokenizer(auxList,"][");
                         StringTokenizer token2;
                         while (token.hasMoreElements()) {
@@ -601,6 +682,8 @@ public class Dgenerar extends JFrame {
                             obj[2] = Double.parseDouble(token2.nextToken());
                             obj[3] = Double.parseDouble(token2.nextToken());
                             obj[4] = Double.parseDouble(token2.nextToken());
+                            obj[5] = Double.parseDouble(token2.nextToken());
+                            obj[6] = Double.parseDouble(token2.nextToken());
                             df.insertRow(0,obj);
                         }
 
@@ -659,7 +742,7 @@ public class Dgenerar extends JFrame {
                 }
             }
         });
-        btnExportarAExcel.setBounds(362, 442, 140, 23);
+        btnExportarAExcel.setBounds(362, 675, 140, 23);
         contentPanel.add(btnExportarAExcel);
 
 
@@ -670,6 +753,8 @@ public class Dgenerar extends JFrame {
                 graphic.getAc(getAc());
                 graphic.getDec(getDec());
                 graphic.getEq(getEq());
+                graphic.getAZ(getAZ());
+                graphic.getAL(getAl());
                 graphic.setVisible(true);
 
             }catch(ClassCastException e){
@@ -678,7 +763,7 @@ public class Dgenerar extends JFrame {
             }
 
         });
-        btnGraficar.setBounds(159, 442, 109, 23);
+        btnGraficar.setBounds(159, 675, 109, 23);
         contentPanel.add(btnGraficar);
     }
 
@@ -704,6 +789,23 @@ public class Dgenerar extends JFrame {
         }
         return dec;
     }
+
+    private double[] getAZ(){
+        dec=new double[df.getRowCount()];
+        for(int i=0;i<dec.length;i++){
+            dec[i]=(double) df.getValueAt(i, 5);
+        }
+        return dec;
+    }
+
+    private double[] getAl(){
+        dec=new double[df.getRowCount()];
+        for(int i=0;i<dec.length;i++){
+            dec[i]=(double) df.getValueAt(i, 6);
+        }
+        return dec;
+    }
+
 
     private double[] getEq(){
         dec=new double[df.getRowCount()];
