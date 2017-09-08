@@ -10,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,27 +64,27 @@ public class Dgenerar extends JFrame {
         contentPanel.add(location);
 
         JLabel date = new JLabel("hora (HH:MM:SS)");
-        date.setBounds(344, 88, 170, 20);
+        date.setBounds(550, 88, 170, 20);
         contentPanel.add(date);
 
         JTextField textHora = new JTextField();
-        textHora.setBounds(529, 88, 20, 20);
+        textHora.setBounds(675, 88, 20, 20);
         contentPanel.add(textHora);
 
         JLabel doscolons = new JLabel(":");
-        doscolons.setBounds(555, 88, 20, 20);
+        doscolons.setBounds(697, 88, 20, 20);
         contentPanel.add(doscolons);
 
         JTextField textMin = new JTextField();
-        textMin.setBounds(580, 88, 20, 20);
+        textMin.setBounds(719, 88, 20, 20);
         contentPanel.add(textMin);
 
         JLabel doscolons2 = new JLabel(":");
-        doscolons2.setBounds(605, 88, 20, 20);
+        doscolons2.setBounds(741, 88, 20, 20);
         contentPanel.add(doscolons2);
 
         JTextField textSeg = new JTextField();
-        textSeg.setBounds(630, 88, 20, 20);
+        textSeg.setBounds(763, 88, 20, 20);
         contentPanel.add(textSeg);
 
 
@@ -108,9 +110,69 @@ public class Dgenerar extends JFrame {
         ButtonGroup grupo = new ButtonGroup();
         grupo.add(rdbtnDecimal);
         grupo.add(rdbtnHorasMinSeg);
+
+        JRadioButton escogerCiudad = new JRadioButton("Ciudades");
+        escogerCiudad.setSelected(true);
+        JRadioButton escogerLong = new JRadioButton("Longitud/Latitud");
+
+        ButtonGroup locacion = new ButtonGroup();
+        locacion.add(escogerCiudad);
+        locacion.add(escogerLong);
+
+        JPanel escogerLocacion = new JPanel();
+        escogerLocacion.setBounds(800,20, 300, 50);
+        escogerLocacion.setBorder(BorderFactory.createTitledBorder("Localizacion"));
+        contentPanel.add(escogerLocacion);
+
+        escogerLocacion.add(escogerCiudad);
+        escogerLocacion.add(escogerLong);
+
+        JTextField inputLongitud = new JTextField();
+        inputLongitud.setBounds(114, 88, 170, 20);
+        contentPanel.add(inputLongitud);
+
+        JLabel labelLatitud = new JLabel("Latitud");
+        labelLatitud.setBounds(290, 88, 170, 20);
+        contentPanel.add(labelLatitud);
+        labelLatitud.setVisible(false);
+
+        JTextField inputLatitud = new JTextField();
+        inputLatitud.setBounds(350, 88, 170, 20);
+        contentPanel.add(inputLatitud);
+
+        inputLongitud.setVisible(false);
+        inputLatitud.setVisible(false);
+
         mongo = new Mongo();
         mongo.createConnection();
         mongo.createCollection();
+
+        escogerCiudad.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(escogerCiudad.isSelected()){
+                    location.setVisible(true);
+                    inputLatitud.setVisible(false);
+                    inputLongitud.setVisible(false);
+                    loc.setText("Localizacion");
+                    labelLatitud.setVisible(false);
+                }
+            }
+        });
+
+        escogerLong.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(escogerLong.isSelected()){
+                    location.setVisible(false);
+                    inputLatitud.setVisible(true);
+                    inputLongitud.setVisible(true);
+                    loc.setText("Longitud");
+                    labelLatitud.setVisible(true);
+                }
+            }
+        });
+
 
         JButton btnGenerar = new JButton("Generar");
         btnGenerar.addActionListener(arg0 -> {
@@ -120,12 +182,25 @@ public class Dgenerar extends JFrame {
 
                 Object[] info = new Object[7];
                 double anio = Double.parseDouble(textField.getText());
-                double longitud = frame.cargar.getLongitud(location.getSelectedIndex());
-                double latitud = frame.cargar.getLatitud(location.getSelectedIndex());
+                double longitud = 0;
+                double latitud = 0;
                 double elevacion = 0;
                 double hora = Double.parseDouble(textHora.getText());
                 double min = Double.parseDouble(textMin.getText());
                 double seg = Double.parseDouble(textSeg.getText());
+                String year = "";
+                if(escogerCiudad.isSelected()) {
+                     longitud = frame.cargar.getLongitud(location.getSelectedIndex());
+                     latitud = frame.cargar.getLatitud(location.getSelectedIndex());
+                     year = String.valueOf(anio)+"_1"+location.getSelectedItem()+hora+min+seg;
+                }else if (escogerLong.isSelected()){
+                    longitud = Double.parseDouble(inputLongitud.getText());
+                    latitud = Double.parseDouble(inputLatitud.getText());
+                    year = String.valueOf(anio)+" "+longitud+" "+latitud+hora+min+seg;
+                }else{
+                    JOptionPane.showMessageDialog(null,"Escoja una de las dos opciones");
+                }
+
                 try {
                     if (elevacion == 0) {
                         elevacion = Double.parseDouble(JOptionPane.showInputDialog("Ingrese la elevacion de la ciudad"));
@@ -136,7 +211,7 @@ public class Dgenerar extends JFrame {
                     JOptionPane.showMessageDialog(null, "Ingrese un campo numerico");
                 }
                 if (rdbtnHorasMinSeg.isSelected()) {
-                    String year = String.valueOf(anio)+"_1"+location.getSelectedItem()+hora+min+seg;
+                    
                     if(mongo.validateDocument(year)) {
                         mongo.createDocument(year, info);
                         for (int i = 12; i >= 1; i--) {
@@ -443,9 +518,9 @@ public class Dgenerar extends JFrame {
                     }
                 }//fin if radiobutton
                 else if (rdbtnDecimal.isSelected()) {
-                    String year2 = String.valueOf(anio)+location.getSelectedItem()+hora+min+seg;
-                    if(mongo.validateDocument(year2)) {
-                        mongo.createDocument(year2, info);
+                    
+                    if(mongo.validateDocument(year)) {
+                        mongo.createDocument(year, info);
                         for (int i = 12; i >= 1; i--) {
                             switch (i) {
                                 case 1:
@@ -460,7 +535,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
                                 case 2:
@@ -479,7 +554,7 @@ public class Dgenerar extends JFrame {
                                             info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                             info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                             df.insertRow(0, info);
-                                            mongo.actualizeDocument(year2, info);
+                                            mongo.actualizeDocument(year, info);
                                         }
 
                                     } else {
@@ -495,7 +570,7 @@ public class Dgenerar extends JFrame {
                                             info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                             info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                             df.insertRow(0, info);
-                                            mongo.actualizeDocument(year2, info);
+                                            mongo.actualizeDocument(year, info);
                                         }
 
                                     }
@@ -512,7 +587,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -527,7 +602,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -542,7 +617,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -557,7 +632,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -572,7 +647,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -587,7 +662,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -602,7 +677,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -617,7 +692,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -632,7 +707,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
                                     break;
 
@@ -648,7 +723,7 @@ public class Dgenerar extends JFrame {
                                         info[5] = frame.obj.topoAzimuthAngle(elevacion,latitud,longitud);
                                         info[6] = frame.obj.topoElevationAngle(elevacion,latitud,longitud);
                                         df.insertRow(0, info);
-                                        mongo.actualizeDocument(year2, info);
+                                        mongo.actualizeDocument(year, info);
                                     }
 
                                     break;
@@ -656,7 +731,7 @@ public class Dgenerar extends JFrame {
                         }
                     }else{
 
-                        String auxList =mongo.fetchDocuments(year2);
+                        String auxList =mongo.fetchDocuments(year);
                         System.out.println(auxList);
                         ArrayList<String> lista = new ArrayList<>();
                         Object[] obj = new Object[7];
