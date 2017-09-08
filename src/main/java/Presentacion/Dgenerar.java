@@ -136,7 +136,7 @@ public class Dgenerar extends JFrame {
                     JOptionPane.showMessageDialog(null, "Ingrese un campo numerico");
                 }
                 if (rdbtnHorasMinSeg.isSelected()) {
-                    String year = String.valueOf(anio)+"_1";
+                    String year = String.valueOf(anio)+"_1"+location.getSelectedItem()+hora+min+seg;
                     if(mongo.validateDocument(year)) {
                         mongo.createDocument(year, info);
                         for (int i = 12; i >= 1; i--) {
@@ -443,7 +443,7 @@ public class Dgenerar extends JFrame {
                     }
                 }//fin if radiobutton
                 else if (rdbtnDecimal.isSelected()) {
-                    String year2 = String.valueOf(anio);
+                    String year2 = String.valueOf(anio)+location.getSelectedItem()+hora+min+seg;
                     if(mongo.validateDocument(year2)) {
                         mongo.createDocument(year2, info);
                         for (int i = 12; i >= 1; i--) {

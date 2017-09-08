@@ -29,6 +29,7 @@ public class CargaParams {
                 params.add(l0);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -42,6 +43,7 @@ public class CargaParams {
         }
 
         return suma;
+
     }
 
     public double L1(double jme) {
@@ -60,6 +62,7 @@ public class CargaParams {
                 params.add(l1);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -71,8 +74,8 @@ public class CargaParams {
         for (Double param : params) {
             suma+=param;
         }
-
         return suma;
+
     }
 
     public double L2(double jme) {
@@ -91,6 +94,7 @@ public class CargaParams {
                 params.add(l2);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -118,10 +122,11 @@ public class CargaParams {
             while ((line = lector.readLine()) != null) {
 
                 StringTokenizer token = new StringTokenizer(line, ";");
-                l3 = Double.parseDouble(token.nextToken())*Math.cos(Double.parseDouble(token.nextToken())+Double.parseDouble(token.nextToken())*jme);
+                l3 = Double.parseDouble(token.nextToken()) * Math.cos(Double.parseDouble(token.nextToken()) + Double.parseDouble(token.nextToken()) * jme);
                 params.add(l3);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -153,6 +158,7 @@ public class CargaParams {
                 params.add(l3);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -189,6 +195,7 @@ public class CargaParams {
                 params.add(b0);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -220,6 +227,7 @@ public class CargaParams {
                 params.add(b1);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -251,6 +259,7 @@ public class CargaParams {
                 params.add(r0);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -282,6 +291,7 @@ public class CargaParams {
                 params.add(r1);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -313,6 +323,7 @@ public class CargaParams {
                 params.add(r2);
 
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -343,8 +354,8 @@ public class CargaParams {
                 StringTokenizer token = new StringTokenizer(line, ";");
                 r3 = Double.parseDouble(token.nextToken())*Math.cos(Double.parseDouble(token.nextToken())+Double.parseDouble(token.nextToken())*jme);
                 params.add(r3);
-
             }
+            lector.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

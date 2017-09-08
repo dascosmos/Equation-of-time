@@ -398,28 +398,28 @@ public class Grafica extends JDialog {
                     tabbedPane.setSelectedIndex(0);
                     lblNewLabel.setText("Azimuth");
                     grafica2D.addScatterPlot("Azimuth/Altura", y3, y4);
-                    grafica2D.setAxisLabels("Ascensi\u00F3n (horas)","Declinaci\u00F3n(grados)");textArea.setEditable(false);
+                    grafica2D.setAxisLabels("Azimuth (grados)","Altura(grados)");textArea.setEditable(false);
                     textArea.setEditable(false);
-                    textArea.setText("Coordenadas ecuatoriales (absolutas):\n"
+                    textArea.setText("Coordenadas AltaAzimutales (locales):\n"
                             + "Son un tipo de coordenadas celestes que muestran la\n"
-                            + "posici\u00F3n de un objeto respecto al ecuador celeste\n"
-                            + "y al punto aries (momento en el que el sol pasa de sur a norte).\n\n"
-                            + "Sus 'ejes' se denominan Ascensi\u00F3n recta y declinaci\u00F3n. ");
+                            + "posici\u00F3n de un objeto respecto a la posicion del observador\n"
+                            + "dependiendo del lugar donde se encutre, estas coordenadas varian.\n\n"
+                            + "Sus 'ejes' se denominan Azimuth y Altura. ");
 
                 }else{
 
                     grafica2D.removeAllPlots();
                     grafica3D.removeAllPlots();
                     tabbedPane.setSelectedIndex(1);
-                    lblNewLabel_1.setText("Ascensi\u00F3n recta/Declinaci\u00F3n");
+                    lblNewLabel_1.setText("Azimuth/Altura");
                     grafica3D.addScatterPlot("AcsR/Dec", x3, y3, y4);
-                    grafica3D.setAxisLabels("Tiempo(d\u00edas)","Ascensi\u00F3n (horas)", "Declinaci\u00F3n(grados)");
+                    grafica3D.setAxisLabels("Tiempo(d\u00edas)","Azimuth (grados)", "Altura (grados)");
                     textArea.setEditable(false);
-                    textArea.setText("Coordenadas ecuatoriales (absolutas):\n"
-                            + "Son un tipo de coordenadas celestes que muestran la\n"
-                            + "posici\u00F3n de un objeto respecto al ecuador celeste\n"
-                            + "y al punto aries (momento en el que el sol pasa de sur a norte).\n\n"
-                            + "Sus 'ejes' se denominan Ascensi\u00F3n recta y declinaci\u00F3n. ");
+					textArea.setText("Coordenadas AltaAzimutales (locales):\n"
+							+ "Son un tipo de coordenadas celestes que muestran la\n"
+							+ "posici\u00F3n de un objeto respecto a la posicion del observador\n"
+							+ "dependiendo del lugar donde se encutre, estas coordenadas varian.\n\n"
+							+ "Sus 'ejes' se denominan Azimuth y Altura. ");
                 }
             } catch (NullPointerException e) {
                 JOptionPane.showMessageDialog(null,
